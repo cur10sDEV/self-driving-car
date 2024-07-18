@@ -14,12 +14,14 @@ class Car {
     this.friction = 0.05;
     this.angle = 0.0;
 
+    this.sensor = new Sensor(this);
     this.controls = new Controls();
   }
 
-  // updates the car position upon change
+  // updates the car position and sensors upon change
   update() {
     this.#move();
+    this.sensor.update();
   }
 
   #move() {
@@ -85,5 +87,8 @@ class Car {
     ctx.fill();
 
     ctx.restore();
+
+    // now car can draw its own sensors
+    this.sensor.draw(ctx);
   }
 }
