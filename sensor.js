@@ -6,10 +6,37 @@ class Sensor {
     this.raySpread = Math.PI / 2;
 
     this.rays = [];
+    this.readings = [];
   }
 
-  update() {
+  update(roadBorders) {
     this.#castRays();
+    this.readings = [];
+
+    this.rays.forEach((ray) => {
+      this.readings.push(this.#getReading(ray, roadBorders));
+    });
+  }
+
+  #getReading(ray, roadBorders) {
+    let touches = [];
+    roadBorders.forEach((border) => {
+      const touch = getIntersection(ray[0], ray[1], border[0], border[1]);
+
+      if (touch) {
+        touches.push(touch);
+      }
+    });
+
+    if (touches.length === 0) return null;
+    else {
+      // getIntersection also returns the offset value alongwith intersection coordinates - x and y
+      // the offset value represents how much far away the point of intersection is from the car's center
+      const offsets = touches.map((t) => t.offset);
+      const minOffset = Math.min(...offsets); // getting the min offset
+      // return the closest intersection
+      return touches.find((t) => t.offset === minOffset);
+    }
   }
 
   #castRays() {
@@ -21,7 +48,7 @@ class Sensor {
         lerp(
           this.raySpread / 2,
           -this.raySpread / 2,
-          this.rayCount == 1 ? 0.5 : i / (this.rayCount - 1)
+          this.rayCount === 1 ? 0.5 : i / (this.rayCount - 1)
         ) + this.car.angle;
 
       // starts from car
@@ -37,13 +64,29 @@ class Sensor {
   }
 
   draw(ctx) {
-    this.rays.forEach((ray) => {
+    for (let i = 0; i < this.rayCount; i++) {
+      // by default end of the ray goes full length
+      let end = this.rays[i][1];
+      // end coordinate where ray will end without intersection
+      if (this.readings[i]) {
+        end = this.readings[i];
+      }
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "yellow";
-      ctx.moveTo(ray[0].x, ray[0].y);
-      ctx.lineTo(ray[1].x, ray[1].y);
+      ctx.moveTo(this.rays[i][0].x, this.rays[i][0].y);
+      // now the (yellow part) ray will end at intersection
+      ctx.lineTo(end.x, end.y);
       ctx.stroke();
-    });
+
+      // now continue the ray after end intersection to visualize where the ray without intersection could have gone
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "black";
+      ctx.moveTo(end.x, end.y);
+      ctx.lineTo(this.rays[i][1].x, this.rays[i][1].y);
+      // now the (yellow part) ray will end at intersection
+      ctx.stroke();
+    }
   }
 }

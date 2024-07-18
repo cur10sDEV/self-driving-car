@@ -9,7 +9,7 @@ const car = new Car(road.getLaneCenter(1), 100, 30, 50);
 animate();
 
 function animate() {
-  car.update();
+  car.update(road.borders);
   // setting height here will make sure the canvas remains full size even upon window change
   canvas.height = window.innerHeight;
 
