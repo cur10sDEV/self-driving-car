@@ -13,6 +13,7 @@ class Car {
     this.maxRevSpeed = -2;
     this.friction = 0.05;
     this.angle = 0.0;
+    this.damaged = false;
 
     this.sensor = new Sensor(this);
     this.controls = new Controls();
@@ -20,9 +21,24 @@ class Car {
 
   // updates the car position and sensors upon change
   update(roadBorders) {
-    this.#move();
-    this.polygon = this.#createPolygon();
+    // only move car if it is not damaged
+    if (!this.damaged) {
+      this.#move();
+      this.polygon = this.#createPolygon();
+      this.damaged = this.#assessDamage(roadBorders);
+    }
+    // sensors will still work even after the damage
     this.sensor.update(roadBorders);
+  }
+
+  #assessDamage(roadBorders) {
+    // check if any of the points of the car is intersected with any of the road borders
+    for (let i = 0; i < roadBorders.length; i++) {
+      if (polysIntersect(this.polygon, roadBorders[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // getting corners of the polygon and using this will draw the polygon on the canvas
@@ -105,6 +121,12 @@ class Car {
 
   // draw the car on the canvas
   draw(ctx) {
+    if (this.damaged) {
+      ctx.fillStyle = "red";
+    } else {
+      ctx.fillStyle = "black";
+    }
+
     // draw the polygon across every polygon point
     ctx.beginPath();
     // move to first point
