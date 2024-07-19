@@ -49,7 +49,7 @@ class Car {
     if (this.speed < 0) {
       this.speed += this.friction;
     }
-    // if speed is very slow just slow it down
+    // if speed is very slow just stop the car
     if (Math.abs(this.speed) < this.friction) {
       this.speed = 0;
     }
