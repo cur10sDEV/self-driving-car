@@ -1,6 +1,6 @@
 class Car {
   // x and y coordinates as to where to place the car initially
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, player = false, maxSpeed = 4) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -9,32 +9,46 @@ class Car {
     // to mimic the real world cars
     this.speed = 0;
     this.acceleration = 0.2;
-    this.maxSpeed = 4;
+    this.maxSpeed = maxSpeed; // taking maxSpeed as input so that traffic cars have variable max speeds
     this.maxRevSpeed = -2;
     this.friction = 0.05;
     this.angle = 0.0;
     this.damaged = false;
 
-    this.sensor = new Sensor(this);
-    this.controls = new Controls();
+    // only player's car needs sensor
+    if (player) {
+      this.sensor = new Sensor(this);
+    }
+    this.controls = new Controls(player);
   }
 
   // updates the car position and sensors upon change
-  update(roadBorders) {
+  // check for collission with traffic
+  update(roadBorders, traffic) {
     // only move car if it is not damaged
     if (!this.damaged) {
       this.#move();
       this.polygon = this.#createPolygon();
-      this.damaged = this.#assessDamage(roadBorders);
+      this.damaged = this.#assessDamage(roadBorders, traffic);
     }
-    // sensors will still work even after the damage
-    this.sensor.update(roadBorders);
+
+    if (this.sensor) {
+      // sensors will still work even after the damage
+      this.sensor.update(roadBorders, traffic);
+    }
   }
 
-  #assessDamage(roadBorders) {
+  #assessDamage(roadBorders, traffic) {
     // check if any of the points of the car is intersected with any of the road borders
     for (let i = 0; i < roadBorders.length; i++) {
       if (polysIntersect(this.polygon, roadBorders[i])) {
+        return true;
+      }
+    }
+
+    // check if any of the points of the car is intersected with any of the traffic cars
+    for (let i = 0; i < traffic.length; i++) {
+      if (polysIntersect(this.polygon, traffic[i].polygon)) {
         return true;
       }
     }
@@ -120,11 +134,11 @@ class Car {
   }
 
   // draw the car on the canvas
-  draw(ctx) {
+  draw(ctx, color) {
     if (this.damaged) {
-      ctx.fillStyle = "red";
+      ctx.fillStyle = "gray";
     } else {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = color;
     }
 
     // draw the polygon across every polygon point
@@ -136,7 +150,10 @@ class Car {
       ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
     }
     ctx.fill();
+
     // now car can draw its own sensors
-    this.sensor.draw(ctx);
+    if (this.sensor) {
+      this.sensor.draw(ctx);
+    }
   }
 }

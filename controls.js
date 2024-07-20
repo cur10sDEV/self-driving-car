@@ -1,12 +1,17 @@
 class Controls {
-  constructor() {
+  constructor(userControlled) {
     this.forward = false;
     this.reverse = false;
     this.left = false;
     this.right = false;
 
-    // add controls
-    this.#addEventListeners();
+    // add controls if user controlled
+    if (userControlled) {
+      this.#addEventListeners();
+    } else {
+      // move forward the traffic car
+      this.forward = true;
+    }
   }
 
   #addEventListeners() {
