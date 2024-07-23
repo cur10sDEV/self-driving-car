@@ -1,6 +1,14 @@
 class Car {
   // x and y coordinates as to where to place the car initially
-  constructor(x, y, width, height, player = false, maxSpeed = 4) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    player = false,
+    useBrain = false,
+    maxSpeed = 4
+  ) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -15,9 +23,14 @@ class Car {
     this.angle = 0.0;
     this.damaged = false;
 
-    // only player's car needs sensor
+    this.useBrain = useBrain;
+
+    // only player's car need sensors and a brain
     if (player) {
       this.sensor = new Sensor(this);
+      // neral counts is like this input = no of rays that will provide the data, hidden layer,
+      // and a output layer that has 4 neurons which will dictate car's movement in the 4 directions
+      this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
     }
     this.controls = new Controls(player);
   }
@@ -35,6 +48,25 @@ class Car {
     if (this.sensor) {
       // sensors will still work even after the damage
       this.sensor.update(roadBorders, traffic);
+      // get the offsets from the sensors readings
+      const offsets = this.sensor.readings.map((s) => {
+        // subracting from so to get lower value when far away from the object but
+        // higher value when close to the object, kind of like the flashlight reflection
+        // on the wall the closer you get the more intense the reflection
+        // this is how the sensors work in the real world
+        return s === null ? 0 : 1 - s.offset;
+      });
+
+      // get outputs from the NN
+      const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+
+      if (this.useBrain) {
+        // the outputs from the NN will now drive the car
+        this.controls.forward = outputs[0];
+        this.controls.left = outputs[1];
+        this.controls.right = outputs[2];
+        this.controls.reverse = outputs[3];
+      }
     }
   }
 

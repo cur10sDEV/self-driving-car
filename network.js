@@ -14,7 +14,7 @@ class NeuralNetwork {
     let outputs = Level.feedForward(givenInputs, network.levels[0]);
     // loop through the remaining levels and updating this outputs
     // by providing the output of the previous level as input to the new level
-    for (let i = 1; i < network.levles.length; i++) {
+    for (let i = 1; i < network.levels.length; i++) {
       outputs = Level.feedForward(outputs, network.levels[i]);
     }
 

@@ -3,13 +3,14 @@ canvas.width = 300;
 
 const ctx = canvas.getContext("2d");
 
-const road = new Road(canvas.width / 2, canvas.width * 0.9, 6);
-const car = new Car(road.getLaneCenter(1), 100, 30, 50, true);
+const road = new Road(canvas.width / 2, canvas.width * 0.9, 5);
+const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
 
 // add traffic - multiple cars
-const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, 3)];
+const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
 
 // add random traffic
+// const traffic = [];
 // for (let i = 0; i < 1000; i++) {
 //   traffic.push(
 //     new Car(
@@ -17,6 +18,7 @@ const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, 3)];
 //       -100 - i * 100,
 //       30,
 //       50,
+//       false,
 //       false,
 //       3
 //     )
