@@ -16,7 +16,7 @@ class Visualizer {
     const bottom = top + height;
 
     const nodeRadius = 18;
-    const { inputs, outputs } = level;
+    const { inputs, outputs, weights } = level;
 
     // joining inputs to outputs
     // the reason to join before draw is because in this way the connection lines will
@@ -26,8 +26,22 @@ class Visualizer {
         ctx.beginPath();
         ctx.moveTo(Visualizer.#getNodeX(inputs, i, left, right), bottom);
         ctx.lineTo(Visualizer.#getNodeX(outputs, j, left, right), top);
+
+        // getting weights for connections between nodes
+        const value = weights[i][j];
+        // value is between -1 and 1 so abs value will be between 0 to 1;
+        const alpha = Math.abs(value);
+        // change color if weights are negative or positive
+        const R = value < 0 ? 0 : 255;
+        // G and R are same that makes yellow
+        const G = R;
+        // blue is opposite
+        const B = value > 0 ? 0 : 255;
+
         ctx.lineWidth = 2;
-        ctx.strokeStyle = "orange";
+        // so the color scheme is yellow for positive and blue for negative values with varying alpha
+        // depending on the value
+        ctx.strokeStyle = `rgba(${R}, ${G}, ${B}, ${alpha})`;
         ctx.stroke();
       }
     }
