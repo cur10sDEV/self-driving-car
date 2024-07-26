@@ -16,7 +16,7 @@ class Visualizer {
     const bottom = top + height;
 
     const nodeRadius = 18;
-    const { inputs, outputs, weights } = level;
+    const { inputs, outputs, weights, biases } = level;
 
     // joining inputs to outputs
     // the reason to join before draw is because in this way the connection lines will
@@ -26,22 +26,9 @@ class Visualizer {
         ctx.beginPath();
         ctx.moveTo(Visualizer.#getNodeX(inputs, i, left, right), bottom);
         ctx.lineTo(Visualizer.#getNodeX(outputs, j, left, right), top);
-
-        // getting weights for connections between nodes
-        const value = weights[i][j];
-        // value is between -1 and 1 so abs value will be between 0 to 1;
-        const alpha = Math.abs(value);
-        // change color if weights are negative or positive
-        const R = value < 0 ? 0 : 255;
-        // G and R are same that makes yellow
-        const G = R;
-        // blue is opposite
-        const B = value > 0 ? 0 : 255;
-
         ctx.lineWidth = 2;
-        // so the color scheme is yellow for positive and blue for negative values with varying alpha
-        // depending on the value
-        ctx.strokeStyle = `rgba(${R}, ${G}, ${B}, ${alpha})`;
+        // passing weights of connections between nodes and getting a rgba value
+        ctx.strokeStyle = getRGBA(weights[i][j]);
         ctx.stroke();
       }
     }
@@ -62,6 +49,22 @@ class Visualizer {
       ctx.arc(x, top, nodeRadius, 0, Math.PI * 2);
       ctx.fillStyle = "white";
       ctx.fill();
+
+      // just a visual trick nothing of logical importance
+      ctx.beginPath();
+      ctx.lineWidth = nodeRadius * 1.25 - nodeRadius;
+      ctx.arc(x, top, nodeRadius + 1, 0, Math.PI * 2);
+      ctx.strokeStyle = "black";
+      ctx.stroke();
+
+      // mapping their biases to every output node
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.arc(x, top, nodeRadius * 1.2, 0, Math.PI * 2);
+      ctx.strokeStyle = getRGBA(biases[i]);
+      ctx.setLineDash([6, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
   }
 

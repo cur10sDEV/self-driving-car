@@ -41,3 +41,18 @@ function polysIntersect(poly1, poly2) {
   }
   return false;
 }
+
+function getRGBA(value) {
+  // value is between -1 and 1 so abs value will be between 0 to 1;
+  const A = Math.abs(value);
+  // change color if weights are negative or positive
+  const R = value < 0 ? 0 : 255;
+  // G and R are same that makes yellow
+  const G = R;
+  // blue is opposite
+  const B = value > 0 ? 0 : 255;
+
+  // so the color scheme is yellow for positive and blue for negative values with varying alpha(A)
+  // depending on the value
+  return `rgba(${R}, ${G}, ${B}, ${A})`;
+}
