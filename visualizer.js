@@ -38,16 +38,16 @@ class Visualizer {
       const x = Visualizer.#getNodeX(inputs, i, left, right);
       ctx.beginPath();
       ctx.arc(x, bottom, nodeRadius, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
+      ctx.fillStyle = getRGBA(inputs[i]);
       ctx.fill();
     }
 
-    // mapping inputs into the visualizer
+    // mapping outputs into the visualizer
     for (let i = 0; i < outputs.length; i++) {
       const x = Visualizer.#getNodeX(outputs, i, left, right);
       ctx.beginPath();
       ctx.arc(x, top, nodeRadius, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
+      ctx.fillStyle = getRGBA(outputs[i]);
       ctx.fill();
 
       // just a visual trick nothing of logical importance
