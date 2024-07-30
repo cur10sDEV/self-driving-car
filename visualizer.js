@@ -18,18 +18,21 @@ class Visualizer {
           0,
           network.levels.length === 1 ? 0.5 : i / (network.levels.length - 1)
         );
+      // setting line dashes that will animate
+      ctx.setLineDash([7, 3]);
       Visualizer.drawLevel(
         ctx,
         network.levels[i],
         left,
         levelTop,
         width,
-        levelHeight
+        levelHeight,
+        i === network.levels.length - 1 ? ["🠉", "🠈", "🠊", "🠋"] : []
       );
     }
   }
 
-  static drawLevel(ctx, level, left, top, width, height) {
+  static drawLevel(ctx, level, left, top, width, height, outputLabels) {
     const right = left + width;
     const bottom = top + height;
 
@@ -86,6 +89,19 @@ class Visualizer {
       ctx.setLineDash([6, 6]);
       ctx.stroke();
       ctx.setLineDash([]);
+
+      // drawing direction arrows
+      if (outputLabels[i]) {
+        ctx.beginPath();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "white";
+        ctx.font = nodeRadius + "px Arial";
+        ctx.fillText(outputLabels[i], x, top + nodeRadius * 0.1);
+        ctx.lineWidth = 2;
+        ctx.strokeText(outputLabels[i], x, top + nodeRadius * 0.1);
+      }
     }
   }
 

@@ -30,7 +30,8 @@ const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
 
 animate();
 
-function animate() {
+// by default requestAnimation frame passes time value to this function as it is used as callback fn
+function animate(time) {
   // update traffic
   for (let i = 0; i < traffic.length; i++) {
     traffic[i].update(road.borders, []);
@@ -53,6 +54,8 @@ function animate() {
 
   carCtx.restore();
 
+  // slowing down the animation and in forward direction(-ve)
+  networkCtx.lineDashOffset = -time / 50;
   // visualize the NN
   Visualizer.drawNetwork(networkCtx, car.brain);
   // updates the scene based on refresh rate of the screen
