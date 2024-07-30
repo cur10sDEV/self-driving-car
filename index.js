@@ -7,7 +7,17 @@ networkCanvas.width = 500;
 const networkCtx = networkCanvas.getContext("2d");
 
 const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9, 3);
-const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
+// const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
+
+// generate cars for model training parallely
+const N = 100;
+const cars = generateCars(N);
+let bestCar = cars[0];
+// updating the best car if we have a best brain
+const bestBrain = getBestBrain();
+if (bestBrain) {
+  bestCar.brain = bestBrain;
+}
 
 // add traffic - multiple cars
 const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
@@ -28,6 +38,34 @@ const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
 //   );
 // }
 
+function generateCars(N) {
+  const cars = [];
+  for (let i = 0; i < N; i++) {
+    cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5));
+  }
+
+  return cars;
+}
+
+// save the best brain to localStorage
+function saveBestBrain() {
+  localStorage.setItem("bestBrain", JSON.stringify(bestCar.brain));
+}
+
+// deletes the best brain from localStorage
+function discardBestBrain() {
+  localStorage.removeItem("bestBrain");
+}
+
+function getBestBrain() {
+  const bestBrain = localStorage.getItem("bestBrain");
+  if (bestBrain) {
+    return JSON.parse(bestBrain);
+  }
+
+  return null;
+}
+
 animate();
 
 // by default requestAnimation frame passes time value to this function as it is used as callback fn
@@ -36,28 +74,44 @@ function animate(time) {
   for (let i = 0; i < traffic.length; i++) {
     traffic[i].update(road.borders, []);
   }
-  car.update(road.borders, traffic); // passing the traffic so that car can interact with the traffic
+
+  for (let i = 0; i < cars.length; i++) {
+    cars[i].update(road.borders, traffic); // passing the traffic so that car can interact with the traffic
+  }
+
+  // finding the best car and selecting it i.e., the car that has the minimum y
+  // as it is moving forward the most
+  const bestCar = cars.find((c) => c.y === Math.min(...cars.map((c) => c.y)));
+
   // setting height here will make sure the carCanvas remains full size even upon window change
   carCanvas.height = window.innerHeight;
   networkCanvas.height = window.innerHeight;
 
   carCtx.save();
   // moving the road so to give the illusion as if a drone is filming from top
-  carCtx.translate(0, -car.y + carCanvas.height * 0.7); // placing the car at safe distance to see the traffic ahead
+  carCtx.translate(0, -bestCar.y + carCanvas.height * 0.7); // placing the car at safe distance to see the traffic ahead
 
   road.draw(carCtx);
   // draw traffic
   for (let i = 0; i < traffic.length; i++) {
     traffic[i].draw(carCtx, "red");
   }
-  car.draw(carCtx, "blue");
+
+  // making the cars semi transparent
+  carCtx.globalAlpha = 0.2;
+  for (let i = 0; i < cars.length; i++) {
+    cars[i].draw(carCtx, "blue");
+  }
+  carCtx.globalAlpha = 1;
+  // emphasizing on the main car and only drawing sensors for this car
+  bestCar.draw(carCtx, "blue", true);
 
   carCtx.restore();
 
   // slowing down the animation and in forward direction(-ve)
   networkCtx.lineDashOffset = -time / 50;
   // visualize the NN
-  Visualizer.drawNetwork(networkCtx, car.brain);
+  Visualizer.drawNetwork(networkCtx, bestCar.brain);
   // updates the scene based on refresh rate of the screen
   requestAnimationFrame(animate);
 }

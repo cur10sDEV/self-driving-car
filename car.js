@@ -166,7 +166,7 @@ class Car {
   }
 
   // draw the car on the canvas
-  draw(ctx, color) {
+  draw(ctx, color, drawSensors = false) {
     if (this.damaged) {
       ctx.fillStyle = "gray";
     } else {
@@ -184,7 +184,7 @@ class Car {
     ctx.fill();
 
     // now car can draw its own sensors
-    if (this.sensor) {
+    if (this.sensor && drawSensors) {
       this.sensor.draw(ctx);
     }
   }
