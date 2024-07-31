@@ -26,7 +26,7 @@ class Car {
     this.useBrain = useBrain;
 
     // only player's car need sensors and a brain
-    if (player) {
+    if (player || useBrain) {
       this.sensor = new Sensor(this);
       // neral counts is like this input = no of rays that will provide the data, hidden layer,
       // and a output layer that has 4 neurons which will dictate car's movement in the 4 directions

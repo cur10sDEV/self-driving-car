@@ -33,15 +33,15 @@ class Sensor {
       const poly = car.polygon;
 
       for (let i = 0; i < poly.length; i++) {
-        const touch = getIntersection(
+        const value = getIntersection(
           ray[0],
           ray[1],
           poly[0],
           poly[(i + 1) % poly.length]
         );
 
-        if (touch) {
-          touches.push(touch);
+        if (value) {
+          touches.push(value);
         }
       }
     });
@@ -101,8 +101,8 @@ class Sensor {
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "black";
-      ctx.moveTo(end.x, end.y);
-      ctx.lineTo(this.rays[i][1].x, this.rays[i][1].y);
+      ctx.moveTo(this.rays[i][1].x, this.rays[i][1].y);
+      ctx.lineTo(end.x, end.y);
       // now the (yellow part) ray will end at intersection
       ctx.stroke();
     }

@@ -10,21 +10,38 @@ const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9, 3);
 // const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
 
 // generate cars for model training parallely
-const N = 100;
+const N = 1000;
 const cars = generateCars(N);
 let bestCar = cars[0];
 // updating the best car if we have a best brain
 const bestBrain = getBestBrain();
 if (bestBrain) {
-  bestCar.brain = bestBrain;
+  for (let i = 0; i < cars.length; i++) {
+    // each car is becoming the best car
+    cars[i].brain = bestBrain;
+
+    // except for the first best car mutate all others
+    // this way we can find better brains
+    if (i !== 0) {
+      NeuralNetwork.mutate(cars[i].brain, 0.1);
+    }
+  }
 }
 
 // add traffic - multiple cars
-const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
+const traffic = [
+  new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(0), -300, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(2), -300, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(0), -500, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(1), -500, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(2), -700, 30, 50, false, false, 3),
+  new Car(road.getLaneCenter(0), -700, 30, 50, false, false, 3),
+];
 
 // add random traffic
 // const traffic = [];
-// for (let i = 0; i < 1000; i++) {
+// for (let i = 0; i < 100; i++) {
 //   traffic.push(
 //     new Car(
 //       road.getLaneCenter(Math.floor(Math.random() * 1000000) % road.laneCount),
@@ -41,7 +58,7 @@ const traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3)];
 function generateCars(N) {
   const cars = [];
   for (let i = 0; i < N; i++) {
-    cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5));
+    cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, false, true, 3.5));
   }
 
   return cars;
