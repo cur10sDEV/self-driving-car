@@ -18,7 +18,7 @@ const bestBrain = getBestBrain();
 if (bestBrain) {
   for (let i = 0; i < cars.length; i++) {
     // each car is becoming the best car
-    cars[i].brain = bestBrain;
+    cars[i].brain = JSON.parse(bestBrain);
 
     // except for the first best car mutate all others
     // this way we can find better brains
@@ -75,12 +75,7 @@ function discardBestBrain() {
 }
 
 function getBestBrain() {
-  const bestBrain = localStorage.getItem("bestBrain");
-  if (bestBrain) {
-    return JSON.parse(bestBrain);
-  }
-
-  return null;
+  return localStorage.getItem("bestBrain");
 }
 
 animate();
@@ -98,7 +93,7 @@ function animate(time) {
 
   // finding the best car and selecting it i.e., the car that has the minimum y
   // as it is moving forward the most
-  const bestCar = cars.find((c) => c.y === Math.min(...cars.map((c) => c.y)));
+  bestCar = cars.find((c) => c.y === Math.min(...cars.map((c) => c.y)));
 
   // setting height here will make sure the carCanvas remains full size even upon window change
   carCanvas.height = window.innerHeight;

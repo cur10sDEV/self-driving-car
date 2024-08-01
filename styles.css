@@ -20,6 +20,10 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background: rgb(0, 0, 255);
+}
+
 #carCanvas {
   background: lightgray;
 }
