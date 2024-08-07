@@ -10,7 +10,7 @@ const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9, 3);
 // const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
 
 // generate cars for model training parallely
-const N = 1000;
+const N = 100;
 const cars = generateCars(N);
 let bestCar = cars[0];
 // updating the best car if we have a best brain
@@ -30,13 +30,76 @@ if (bestBrain) {
 
 // add traffic - multiple cars
 const traffic = [
-  new Car(road.getLaneCenter(1), -100, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(0), -300, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(2), -300, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(0), -500, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(1), -500, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(2), -700, 30, 50, false, false, 3),
-  new Car(road.getLaneCenter(0), -700, 30, 50, false, false, 3),
+  new Car(
+    road.getLaneCenter(1),
+    -100,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(0),
+    -300,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(2),
+    -300,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(0),
+    -500,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(1),
+    -500,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(2),
+    -700,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(0),
+    -700,
+    30,
+    50,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
 ];
 
 // add random traffic
@@ -106,17 +169,17 @@ function animate(time) {
   road.draw(carCtx);
   // draw traffic
   for (let i = 0; i < traffic.length; i++) {
-    traffic[i].draw(carCtx, "red");
+    traffic[i].draw(carCtx);
   }
 
   // making the cars semi transparent
   carCtx.globalAlpha = 0.2;
   for (let i = 0; i < cars.length; i++) {
-    cars[i].draw(carCtx, "blue");
+    cars[i].draw(carCtx);
   }
   carCtx.globalAlpha = 1;
   // emphasizing on the main car and only drawing sensors for this car
-  bestCar.draw(carCtx, "blue", true);
+  bestCar.draw(carCtx, true);
 
   carCtx.restore();
 

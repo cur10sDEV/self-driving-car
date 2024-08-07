@@ -56,3 +56,10 @@ function getRGBA(value) {
   // depending on the value
   return `rgba(${R}, ${G}, ${B}, ${A})`;
 }
+
+function getRandomColor() {
+  // random color for cars
+  const hue = 290 + Math.random() * 260;
+
+  return `hsl(${hue},100%,60%)`;
+}
