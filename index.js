@@ -10,7 +10,7 @@ const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9, 3);
 // const car = new Car(road.getLaneCenter(1), 100, 30, 50, true, true, 3.5);
 
 // generate cars for model training parallely
-const N = 100;
+const N = 1000;
 const cars = generateCars(N);
 let bestCar = cars[0];
 // updating the best car if we have a best brain
@@ -33,8 +33,8 @@ const traffic = [
   new Car(
     road.getLaneCenter(1),
     -100,
-    30,
-    50,
+    40,
+    70,
     false,
     false,
     3,
@@ -42,9 +42,9 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(0),
-    -300,
-    30,
-    50,
+    -250,
+    40,
+    70,
     false,
     false,
     3,
@@ -52,9 +52,9 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(2),
-    -300,
-    30,
-    50,
+    -250,
+    40,
+    70,
     false,
     false,
     3,
@@ -62,9 +62,9 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(0),
-    -500,
-    30,
-    50,
+    -400,
+    40,
+    70,
     false,
     false,
     3,
@@ -72,9 +72,9 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(1),
-    -500,
-    30,
-    50,
+    -400,
+    40,
+    70,
     false,
     false,
     3,
@@ -82,9 +82,9 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(2),
-    -700,
-    30,
-    50,
+    -550,
+    40,
+    70,
     false,
     false,
     3,
@@ -92,9 +92,39 @@ const traffic = [
   ),
   new Car(
     road.getLaneCenter(0),
+    -550,
+    40,
+    70,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(1),
     -700,
-    30,
-    50,
+    40,
+    70,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(0),
+    -850,
+    40,
+    70,
+    false,
+    false,
+    3,
+    getRandomColor()
+  ),
+  new Car(
+    road.getLaneCenter(2),
+    -850,
+    40,
+    70,
     false,
     false,
     3,
@@ -121,7 +151,7 @@ const traffic = [
 function generateCars(N) {
   const cars = [];
   for (let i = 0; i < N; i++) {
-    cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, false, true, 3.5));
+    cars.push(new Car(road.getLaneCenter(1), 100, 40, 70, false, true, 3.5));
   }
 
   return cars;
