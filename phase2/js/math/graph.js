@@ -18,7 +18,20 @@ class Graph {
     }
   }
 
+  containsPoint(point) {
+    return this.points.find((p) => p.equals(point));
+  }
+
   addPoint(newPoint) {
     this.points.push(newPoint);
+  }
+
+  // draw a new point only if there's no point there
+  tryAddPoint(point) {
+    if (!this.containsPoint(point)) {
+      this.addPoint(point);
+      return true;
+    }
+    return false;
   }
 }
