@@ -15,3 +15,15 @@ const s4 = new Segment(p4, p1);
 
 const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
 graph.draw(canvasCtx);
+
+function addRandomPoint() {
+  graph.addPoint(
+    new Point(
+      Math.floor(Math.random() * myCanvas.width),
+      Math.floor(Math.random() * myCanvas.height)
+    )
+  );
+
+  canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  graph.draw(canvasCtx);
+}

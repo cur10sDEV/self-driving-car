@@ -17,4 +17,8 @@ class Graph {
       point.draw(ctx);
     }
   }
+
+  addPoint(newPoint) {
+    this.points.push(newPoint);
+  }
 }
