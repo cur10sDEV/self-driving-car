@@ -17,7 +17,7 @@ const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
 graph.draw(canvasCtx);
 
 function addRandomPoint() {
-  const success = graph.tryAddPoint(
+  graph.tryAddPoint(
     new Point(
       Math.floor(Math.random() * myCanvas.width),
       Math.floor(Math.random() * myCanvas.height)
@@ -26,5 +26,18 @@ function addRandomPoint() {
 
   canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
   graph.draw(canvasCtx);
+}
+
+function addRandomSegment() {
+  // picking random points from the graph and adding a segment between them
+  const index1 = Math.floor(Math.random() * graph.points.length);
+  const index2 = Math.floor(Math.random() * graph.points.length);
+
+  const success = graph.tryAddSegment(
+    new Segment(graph.points[index1], graph.points[index2])
+  );
   console.log(success);
+
+  canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  graph.draw(canvasCtx);
 }

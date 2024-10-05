@@ -34,4 +34,23 @@ class Graph {
     }
     return false;
   }
+
+  containsSegment(segment) {
+    return this.segments.find((s) => s.equals(segment));
+  }
+
+  addSegment(newSegment) {
+    this.segments.push(newSegment);
+  }
+
+  tryAddSegment(segment) {
+    // do not add segment if there's already a segment between the points
+    // or if the points are the same (same point trying to connect to itself)
+    if (!this.containsSegment(segment) && !segment.p1.equals(segment.p2)) {
+      this.addSegment(segment);
+      return true;
+    }
+
+    return false;
+  }
 }
