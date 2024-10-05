@@ -33,10 +33,38 @@ function addRandomSegment() {
   const index1 = Math.floor(Math.random() * graph.points.length);
   const index2 = Math.floor(Math.random() * graph.points.length);
 
-  const success = graph.tryAddSegment(
-    new Segment(graph.points[index1], graph.points[index2])
-  );
-  console.log(success);
+  graph.tryAddSegment(new Segment(graph.points[index1], graph.points[index2]));
+
+  canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  graph.draw(canvasCtx);
+}
+
+function removeRandomSegment() {
+  if (graph.segments.length === 0) {
+    console.log("No segments!");
+  }
+
+  const index = Math.floor(Math.random() * graph.segments.length);
+  graph.removeSegment(graph.segments[index]);
+
+  canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  graph.draw(canvasCtx);
+}
+
+function removeRandomPoint() {
+  if (graph.points.length === 0) {
+    console.log("No points!");
+  }
+
+  const index = Math.floor(Math.random() * graph.points.length);
+  graph.removePoint(graph.points[index]);
+
+  canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  graph.draw(canvasCtx);
+}
+
+function removeAll() {
+  graph.dispose();
 
   canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
   graph.draw(canvasCtx);

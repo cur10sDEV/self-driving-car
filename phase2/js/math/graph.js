@@ -53,4 +53,33 @@ class Graph {
 
     return false;
   }
+
+  removeSegment(segment) {
+    this.segments.splice(this.segments.indexOf(segment), 1);
+  }
+
+  removePoint(point) {
+    const segmentsWithPoint = this.getSegmentsWithPoint(point);
+    for (const seg of segmentsWithPoint) {
+      this.removeSegment(seg);
+    }
+    this.points.splice(this.points.indexOf(point), 1);
+  }
+
+  getSegmentsWithPoint(point) {
+    let segs = [];
+
+    this.segments.forEach((seg) => {
+      if (seg.includes(point)) {
+        segs.push(seg);
+      }
+    });
+
+    return segs;
+  }
+
+  dispose() {
+    this.points.length = 0;
+    this.segments.length = 0;
+  }
 }
