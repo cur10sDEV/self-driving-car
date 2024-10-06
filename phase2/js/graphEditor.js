@@ -14,52 +14,57 @@ class GraphEditor {
   }
 
   #addEventListeners() {
-    this.canvas.addEventListener("mousedown", (evt) => {
-      // if it is a right click delete the hovered point
-      if (evt.button === 2) {
-        if (this.selected) {
-          // remove selection upon right click
-          this.selected = null;
-        } else if (this.hovered) {
-          // deletes the point if there's no selected point and is being hovered over
-          this.#removePoint(this.hovered);
-        }
-      }
+    // Note: binding this to event handlers because their `this` refers to the canvas
+    this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
 
-      // if it is a left click
-      if (evt.button === 0) {
-        this.mouse = new Point(evt.offsetX, evt.offsetY);
-        // check if new point is on top of another point
-        if (this.hovered) {
-          // if a point is already selected then create a segment between it and the hovered point
-          this.#select(this.hovered);
-          // now is draggable
-          this.dragging = true;
-          return;
-        }
-
-        // new point will be added to position of mouse pointer
-        this.graph.addPoint(this.mouse);
-        // if a point is already selected then create a segment between it and the new point
-        this.#select(this.mouse);
-        this.hovered = this.mouse;
-      }
-    });
-
-    this.canvas.addEventListener("mousemove", (evt) => {
-      this.mouse = new Point(evt.offsetX, evt.offsetY);
-      this.hovered = getNearestPoint(this.mouse, this.graph.points, 18);
-      // gets dragged along with mouse pointer
-      if (this.dragging === true) {
-        this.selected.x = this.mouse.x;
-        this.selected.y = this.mouse.y;
-      }
-    });
+    this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
 
     // disable context menu on right click
     this.canvas.addEventListener("contextmenu", (evt) => evt.preventDefault());
     // remove dragging upon release of the mouse button
     this.canvas.addEventListener("mouseup", (evt) => (this.dragging = false));
+  }
+
+  #handleMouseDown(evt) {
+    // if it is a right click delete the hovered point
+    if (evt.button === 2) {
+      if (this.selected) {
+        // remove selection upon right click
+        this.selected = null;
+      } else if (this.hovered) {
+        // deletes the point if there's no selected point and is being hovered over
+        this.#removePoint(this.hovered);
+      }
+    }
+
+    // if it is a left click
+    if (evt.button === 0) {
+      this.mouse = new Point(evt.offsetX, evt.offsetY);
+      // check if new point is on top of another point
+      if (this.hovered) {
+        // if a point is already selected then create a segment between it and the hovered point
+        this.#select(this.hovered);
+        // now is draggable
+        this.dragging = true;
+        return;
+      }
+
+      // new point will be added to position of mouse pointer
+      this.graph.addPoint(this.mouse);
+      // if a point is already selected then create a segment between it and the new point
+      this.#select(this.mouse);
+      this.hovered = this.mouse;
+    }
+  }
+
+  #handleMouseMove(evt) {
+    this.mouse = new Point(evt.offsetX, evt.offsetY);
+    this.hovered = getNearestPoint(this.mouse, this.graph.points, 18);
+    // gets dragged along with mouse pointer
+    if (this.dragging === true) {
+      this.selected.x = this.mouse.x;
+      this.selected.y = this.mouse.y;
+    }
   }
 
   #select(point) {
