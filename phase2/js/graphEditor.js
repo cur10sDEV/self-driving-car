@@ -80,6 +80,9 @@ class GraphEditor {
   display() {
     this.graph.draw(this.ctx);
     if (this.selected) {
+      // select if hovering over a point or else follow mouse movement and draw segment
+      const intent = this.hovered ? this.hovered : this.mouse;
+      new Segment(this.selected, intent).draw(this.ctx, { dash: [3, 3] }); // dash[0] - dash line size, dash[1] - gap size
       this.selected.draw(this.ctx, { outline: true });
     }
     if (this.hovered) {
