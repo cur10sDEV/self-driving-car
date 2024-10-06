@@ -18,6 +18,9 @@ class GraphEditor {
       if (evt.button === 2) {
         if (this.hovered) {
           this.#removePoint(this.hovered);
+        } else {
+          // remove selection upon right click if not hovering over any point
+          this.selected = null;
         }
       }
 
@@ -26,8 +29,8 @@ class GraphEditor {
         const newPoint = new Point(evt.offsetX, evt.offsetY);
         // check if new point is on top of another point
         if (this.hovered) {
-          // existing point will be selected
-          this.selected = this.hovered;
+          // if a point is already selected then create a segment between it and the hovered point
+          this.#select(this.hovered);
           // now is draggable
           this.dragging = true;
           return;
@@ -35,9 +38,9 @@ class GraphEditor {
 
         // new point will be added to position of mouse pointer
         this.graph.addPoint(newPoint);
-        // the new point will automatically be selected and hovered
+        // if a point is already selected then create a segment between it and the new point
+        this.#select(newPoint);
         this.hovered = newPoint;
-        this.selected = newPoint;
       }
     });
 
@@ -55,6 +58,14 @@ class GraphEditor {
     this.canvas.addEventListener("contextmenu", (evt) => evt.preventDefault());
     // remove dragging upon release of the mouse button
     this.canvas.addEventListener("mouseup", (evt) => (this.dragging = false));
+  }
+
+  #select(point) {
+    if (this.selected) {
+      this.graph.tryAddSegment(new Segment(this.selected, point));
+    }
+    // the point will be selected
+    this.selected = point;
   }
 
   #removePoint(point) {
