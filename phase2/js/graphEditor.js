@@ -5,9 +5,10 @@ class GraphEditor {
 
     this.ctx = this.canvas.getContext("2d");
 
-    this.selected = null;
-    this.hovered = null;
-    this.dragging = false;
+    this.selected = null; // selected point
+    this.hovered = null; // hovered point
+    this.dragging = false; // if is dragging or not
+    this.mouse = null; // current mouse position
 
     this.#addEventListeners();
   }
@@ -26,7 +27,7 @@ class GraphEditor {
 
       // if it is a left click
       if (evt.button === 0) {
-        const newPoint = new Point(evt.offsetX, evt.offsetY);
+        this.mouse = new Point(evt.offsetX, evt.offsetY);
         // check if new point is on top of another point
         if (this.hovered) {
           // if a point is already selected then create a segment between it and the hovered point
@@ -37,20 +38,20 @@ class GraphEditor {
         }
 
         // new point will be added to position of mouse pointer
-        this.graph.addPoint(newPoint);
+        this.graph.addPoint(this.mouse);
         // if a point is already selected then create a segment between it and the new point
-        this.#select(newPoint);
-        this.hovered = newPoint;
+        this.#select(this.mouse);
+        this.hovered = this.mouse;
       }
     });
 
     this.canvas.addEventListener("mousemove", (evt) => {
-      const newPoint = new Point(evt.offsetX, evt.offsetY);
-      this.hovered = getNearestPoint(newPoint, this.graph.points, 18);
+      this.mouse = new Point(evt.offsetX, evt.offsetY);
+      this.hovered = getNearestPoint(this.mouse, this.graph.points, 18);
       // gets dragged along with mouse pointer
       if (this.dragging === true) {
-        this.selected.x = newPoint.x;
-        this.selected.y = newPoint.y;
+        this.selected.x = this.mouse.x;
+        this.selected.y = this.mouse.y;
       }
     });
 
