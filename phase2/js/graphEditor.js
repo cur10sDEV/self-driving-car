@@ -16,7 +16,7 @@ class GraphEditor {
       // if it is a right click delete the hovered point
       if (evt.button === 2) {
         if (this.hovered) {
-          this.graph.removePoint(this.hovered);
+          this.#removePoint(this.hovered);
         }
       }
 
@@ -32,7 +32,8 @@ class GraphEditor {
 
         // new point will be added to position of mouse pointer
         this.graph.addPoint(newPoint);
-        // the new point will automatically be selected
+        // the new point will automatically be selected and hovered
+        this.hovered = newPoint;
         this.selected = newPoint;
       }
     });
@@ -44,6 +45,14 @@ class GraphEditor {
 
     // disable context menu on right click
     this.canvas.addEventListener("contextmenu", (evt) => evt.preventDefault());
+  }
+
+  #removePoint(point) {
+    graph.removePoint(point);
+    this.hovered = null;
+    if (this.selected === point) {
+      this.selected = null;
+    }
   }
 
   display() {
