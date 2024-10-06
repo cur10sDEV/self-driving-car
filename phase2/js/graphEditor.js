@@ -17,11 +17,12 @@ class GraphEditor {
     this.canvas.addEventListener("mousedown", (evt) => {
       // if it is a right click delete the hovered point
       if (evt.button === 2) {
-        if (this.hovered) {
-          this.#removePoint(this.hovered);
-        } else {
-          // remove selection upon right click if not hovering over any point
+        if (this.selected) {
+          // remove selection upon right click
           this.selected = null;
+        } else if (this.hovered) {
+          // deletes the point if there's no selected point and is being hovered over
+          this.#removePoint(this.hovered);
         }
       }
 
