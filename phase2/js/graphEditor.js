@@ -1,6 +1,7 @@
 class GraphEditor {
-  constructor(canvas, graph) {
-    this.canvas = canvas;
+  constructor(viewport, graph) {
+    this.viewport = viewport;
+    this.canvas = viewport.canvas;
     this.graph = graph;
 
     this.ctx = this.canvas.getContext("2d");
@@ -26,20 +27,19 @@ class GraphEditor {
   }
 
   #handleMouseDown(evt) {
-    // if it is a right click delete the hovered point
     if (evt.button === 2) {
       if (this.selected) {
         // remove selection upon right click
         this.selected = null;
       } else if (this.hovered) {
-        // deletes the point if there's no selected point and is being hovered over
+        // deletes hovered point if there's no selected point
         this.#removePoint(this.hovered);
       }
     }
 
     // if it is a left click
     if (evt.button === 0) {
-      this.mouse = new Point(evt.offsetX, evt.offsetY);
+      this.mouse = this.viewport.getMouse(evt);
       // check if new point is on top of another point
       if (this.hovered) {
         // if a point is already selected then create a segment between it and the hovered point
@@ -58,8 +58,12 @@ class GraphEditor {
   }
 
   #handleMouseMove(evt) {
-    this.mouse = new Point(evt.offsetX, evt.offsetY);
-    this.hovered = getNearestPoint(this.mouse, this.graph.points, 18);
+    this.mouse = this.viewport.getMouse(evt); // get mouse point based on viewport's zoom level
+    this.hovered = getNearestPoint(
+      this.mouse,
+      this.graph.points,
+      18 * this.viewport.zoom
+    );
     // gets dragged along with mouse pointer
     if (this.dragging === true) {
       this.selected.x = this.mouse.x;
