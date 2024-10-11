@@ -19,6 +19,18 @@ class ViewPort {
     this.#addEventListeners();
   }
 
+  reset() {
+    this.ctx.restore();
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.save();
+    // zoom
+    this.ctx.translate(this.center.x, this.center.y);
+    this.ctx.scale(1 / this.zoom, 1 / this.zoom);
+    // pan and drag
+    const offset = this.getOffset();
+    this.ctx.translate(offset.x, offset.y);
+  }
+
   // after zoom in-and-out we need to get the point based on zoom
   // otherwise it will be fixed to the initial size and won't be able to use the whole canvas
   getMouse(evt, subtractDragOffset = false) {
