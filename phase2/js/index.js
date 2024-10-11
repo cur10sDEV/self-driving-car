@@ -23,6 +23,7 @@ function animate() {
   canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
   canvasCtx.save();
   // zoom
+  canvasCtx.translate(viewport.center.x, viewport.center.y);
   canvasCtx.scale(1 / viewport.zoom, 1 / viewport.zoom);
   // pan and drag
   const offset = viewport.getOffset();

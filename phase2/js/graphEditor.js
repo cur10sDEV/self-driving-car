@@ -58,7 +58,7 @@ class GraphEditor {
   }
 
   #handleMouseMove(evt) {
-    this.mouse = this.viewport.getMouse(evt); // get mouse point based on viewport's zoom level
+    this.mouse = this.viewport.getMouse(evt, true); // get mouse point based on viewport's zoom and drag
     this.hovered = getNearestPoint(
       this.mouse,
       this.graph.points,
