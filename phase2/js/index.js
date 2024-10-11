@@ -22,7 +22,12 @@ animate();
 function animate() {
   canvasCtx.clearRect(0, 0, myCanvas.width, myCanvas.height);
   canvasCtx.save();
+  // zoom
   canvasCtx.scale(1 / viewport.zoom, 1 / viewport.zoom);
+  // pan and drag
+  const offset = viewport.getOffset();
+  canvasCtx.translate(offset.x, offset.y);
+
   graphEditor.display();
   canvasCtx.restore();
   requestAnimationFrame(animate);
