@@ -87,6 +87,13 @@ class GraphEditor {
     }
   }
 
+  // deletes graph and resets the graph editor
+  dispose() {
+    this.graph.dispose();
+    this.selected = null;
+    this.hovered = null;
+  }
+
   display() {
     this.graph.draw(this.ctx);
     if (this.selected) {
