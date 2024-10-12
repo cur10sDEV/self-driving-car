@@ -14,6 +14,7 @@ animate();
 function animate() {
   viewport.reset();
   graphEditor.display();
+  new Envelope(graph.segments[0], 150, 20).draw(canvasCtx);
   requestAnimationFrame(animate);
 }
 
