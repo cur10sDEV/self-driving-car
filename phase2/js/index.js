@@ -14,7 +14,7 @@ animate();
 function animate() {
   viewport.reset();
   graphEditor.display();
-  new Polygon(graph.points).draw(canvasCtx);
+  new Envelope(graph.segments[0], 80).draw(canvasCtx);
   requestAnimationFrame(animate);
 }
 
