@@ -6,24 +6,24 @@ class Graph {
     this.segments = segments;
   }
 
-  draw(ctx) {
-    // draw segments on top of canvas
-    for (const seg of this.segments) {
-      seg.draw(ctx);
-    }
+  static load(info) {
+    const points = info.points.map((i) => new Point(i.x, i.y));
+    const segments = info.segments.map(
+      (i) =>
+        new Segment(
+          points.find((p) => p.equals(i.p1)),
+          points.find((p) => p.equals(i.p2))
+        )
+    );
+    return new Graph(points, segments);
+  }
 
-    // draw points on top of canvas and on top of segments also (visual aid)
-    for (const point of this.points) {
-      point.draw(ctx);
-    }
+  addPoint(point) {
+    this.points.push(point);
   }
 
   containsPoint(point) {
     return this.points.find((p) => p.equals(point));
-  }
-
-  addPoint(newPoint) {
-    this.points.push(newPoint);
   }
 
   // draw a new point only if there's no point there
@@ -35,46 +35,43 @@ class Graph {
     return false;
   }
 
-  containsSegment(segment) {
-    return this.segments.find((s) => s.equals(segment));
-  }
-
-  addSegment(newSegment) {
-    this.segments.push(newSegment);
-  }
-
-  tryAddSegment(segment) {
-    // do not add segment if there's already a segment between the points
-    // or if the points are the same (same point trying to connect to itself)
-    if (!this.containsSegment(segment) && !segment.p1.equals(segment.p2)) {
-      this.addSegment(segment);
-      return true;
-    }
-
-    return false;
-  }
-
-  removeSegment(segment) {
-    this.segments.splice(this.segments.indexOf(segment), 1);
-  }
-
   removePoint(point) {
-    const segmentsWithPoint = this.getSegmentsWithPoint(point);
-    for (const seg of segmentsWithPoint) {
+    const segs = this.getSegmentsWithPoint(point);
+    for (const seg of segs) {
       this.removeSegment(seg);
     }
     this.points.splice(this.points.indexOf(point), 1);
   }
 
-  getSegmentsWithPoint(point) {
-    let segs = [];
+  addSegment(seg) {
+    this.segments.push(seg);
+  }
 
-    this.segments.forEach((seg) => {
+  containsSegment(seg) {
+    return this.segments.find((s) => s.equals(seg));
+  }
+
+  tryAddSegment(seg) {
+    // do not add segment if there's already a segment between the points
+    // or if the points are the same (same point trying to connect to itself)
+    if (!this.containsSegment(seg) && !seg.p1.equals(seg.p2)) {
+      this.addSegment(seg);
+      return true;
+    }
+    return false;
+  }
+
+  removeSegment(seg) {
+    this.segments.splice(this.segments.indexOf(seg), 1);
+  }
+
+  getSegmentsWithPoint(point) {
+    const segs = [];
+    for (const seg of this.segments) {
       if (seg.includes(point)) {
         segs.push(seg);
       }
-    });
-
+    }
     return segs;
   }
 
@@ -83,15 +80,15 @@ class Graph {
     this.segments.length = 0;
   }
 
-  static load(info) {
-    const points = info.points.map((i) => new Point(i.x, i.y));
-    const segments = info.segments.map(
-      (i) =>
-        new Segment(
-          points.find((p) => p.equals(i.p1)),
-          points.find((p) => p.equals(i.p2))
-        )
-    );
-    return new Graph(points, segments);
+  draw(ctx) {
+    // draw segments on top of canvas
+    for (const seg of this.segments) {
+      seg.draw(ctx);
+    }
+
+    // draw points on top of canvas and on top of segments also (visual aid)
+    for (const point of this.points) {
+      point.draw(ctx);
+    }
   }
 }

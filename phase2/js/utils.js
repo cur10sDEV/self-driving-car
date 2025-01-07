@@ -3,7 +3,6 @@
 function getNearestPoint(loc, points, threshold = Number.MAX_SAFE_INTEGER) {
   let minDist = Number.MAX_SAFE_INTEGER;
   let nearest = null;
-
   for (const point of points) {
     const dist = distance(point, loc);
     if (dist < minDist && dist < threshold) {
@@ -11,7 +10,6 @@ function getNearestPoint(loc, points, threshold = Number.MAX_SAFE_INTEGER) {
       nearest = point;
     }
   }
-
   return nearest;
 }
 
@@ -27,7 +25,7 @@ function add(p1, p2) {
   return new Point(p1.x + p2.x, p1.y + p2.y);
 }
 
-function difference(p1, p2) {
+function subtract(p1, p2) {
   return new Point(p1.x - p2.x, p1.y - p2.y);
 }
 
@@ -51,10 +49,9 @@ function getIntersection(A, B, C, D) {
   const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
   const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
 
-  if (bottom !== 0) {
+  if (bottom != 0) {
     const t = tTop / bottom;
     const u = uTop / bottom;
-
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
       return {
         x: lerp(A.x, B.x, t),
@@ -67,11 +64,11 @@ function getIntersection(A, B, C, D) {
   return null;
 }
 
-function lerp(A, B, t) {
-  return A + (B - A) * t;
+function lerp(a, b, t) {
+  return a + (b - a) * t;
 }
 
 function getRandomColor() {
   const hue = 290 + Math.random() * 260;
-  return `hsl(${hue}, 100%, 60%)`;
+  return "hsl(" + hue + ", 100%, 60%)";
 }

@@ -1,7 +1,6 @@
 class Polygon {
   constructor(points) {
     this.points = points;
-
     this.segments = [];
     for (let i = 1; i <= points.length; i++) {
       this.segments.push(new Segment(points[i - 1], points[i % points.length]));
@@ -10,13 +9,12 @@ class Polygon {
 
   static union(polys) {
     Polygon.multiBreak(polys);
-
     const keptSegments = [];
     for (let i = 0; i < polys.length; i++) {
       for (const seg of polys[i].segments) {
         let keep = true;
         for (let j = 0; j < polys.length; j++) {
-          if (i !== j) {
+          if (i != j) {
             if (polys[j].containsSegment(seg)) {
               keep = false;
               break;
@@ -28,7 +26,6 @@ class Polygon {
         }
       }
     }
-
     return keptSegments;
   }
 
@@ -55,7 +52,7 @@ class Polygon {
         );
 
         // if intersection exists and if they don't intersect exactly at the tip
-        if (int && int.offset !== 1 && int.offset !== 0) {
+        if (int && int.offset != 1 && int.offset != 0) {
           const point = new Point(int.x, int.y);
           // cleaning the intersections (overlapping)
           let aux = segs1[i].p2;
@@ -70,8 +67,8 @@ class Polygon {
   }
 
   containsSegment(seg) {
-    const midPoint = average(seg.p1, seg.p2);
-    return this.containsPoint(midPoint);
+    const midpoint = average(seg.p1, seg.p2);
+    return this.containsPoint(midpoint);
   }
 
   // if the point is inside or outside the polygon
@@ -84,8 +81,7 @@ class Polygon {
         intersectionCount++;
       }
     }
-
-    return intersectionCount % 2 === 1; // if count is odd then the point is inside
+    return intersectionCount % 2 == 1; // if count is odd then the point is inside
   }
 
   drawSegments(ctx) {
@@ -96,11 +92,11 @@ class Polygon {
 
   draw(
     ctx,
-    { stroke = "blue", lineWidth = 2, fill = "rgba(0,0,255,0.3" } = {}
+    { stroke = "blue", lineWidth = 2, fill = "rgba(0,0,255,0.3)" } = {}
   ) {
     ctx.beginPath();
     ctx.fillStyle = fill;
-    ctx.stokeStyle = stroke;
+    ctx.strokeStyle = stroke;
     ctx.lineWidth = lineWidth;
     // connecting every point
     ctx.moveTo(this.points[0].x, this.points[0].y);

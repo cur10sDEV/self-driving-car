@@ -74,7 +74,7 @@ class Car {
         // higher value when close to the object, kind of like the flashlight reflection
         // on the wall the closer you get the more intense the reflection
         // this is how the sensors work in the real world
-        return s === null ? 0 : 1 - s.offset;
+        return s == null ? 0 : 1 - s.offset;
       });
 
       // get outputs from the NN

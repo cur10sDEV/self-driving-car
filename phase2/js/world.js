@@ -1,5 +1,5 @@
 class World {
-  constructor(graph, roadWidth = 125, roadRoundness = 10) {
+  constructor(graph, roadWidth = 100, roadRoundness = 10) {
     this.graph = graph;
     this.roadWidth = roadWidth;
     this.roadRoundness = roadRoundness;
@@ -24,15 +24,12 @@ class World {
   }
 
   draw(ctx) {
-    // draw roads
     for (const env of this.envelopes) {
       env.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 });
     }
-    // draw segments as dashed lines on the road
     for (const seg of this.graph.segments) {
-      seg.draw(ctx, { color: "white", width: 4, dash: [20, 20] });
+      seg.draw(ctx, { color: "white", width: 4, dash: [10, 10] });
     }
-    // draw road borders
     for (const seg of this.roadBorders) {
       seg.draw(ctx, { color: "white", width: 4 });
     }

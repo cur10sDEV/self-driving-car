@@ -1,4 +1,4 @@
-class ViewPort {
+class Viewport {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
@@ -9,6 +9,7 @@ class ViewPort {
 
     // pan and drag
     this.offset = scale(this.center, -1); // initial offset calculation, otherwise viewport will move to half width and height
+
     this.drag = {
       start: new Point(0, 0),
       end: new Point(0, 0),
@@ -38,7 +39,7 @@ class ViewPort {
       (evt.offsetX - this.center.x) * this.zoom - this.offset.x,
       (evt.offsetY - this.center.y) * this.zoom - this.offset.y
     );
-    return subtractDragOffset ? difference(p, this.drag.offset) : p;
+    return subtractDragOffset ? subtract(p, this.drag.offset) : p;
   }
 
   // add the dragged offset to the current offset
@@ -58,20 +59,10 @@ class ViewPort {
     this.canvas.addEventListener("mouseup", this.#handleMouseUp.bind(this));
   }
 
-  // handle zoom
-  #handleMouseWheel(evt) {
-    const direction = Math.sign(evt.deltaY);
-    // change zoom by this amount
-    const step = 0.1;
-    this.zoom += direction * step;
-    // keep zoom between some min and max value
-    this.zoom = Math.max(1, Math.min(5, this.zoom));
-  }
-
   // pan and drag
   #handleMouseDown(evt) {
-    // middle button
-    if (evt.button === 1) {
+    if (evt.button == 1) {
+      // middle button
       this.drag.start = this.getMouse(evt);
       this.drag.active = true;
     }
@@ -81,7 +72,7 @@ class ViewPort {
     // if middle button is pressed already
     if (this.drag.active) {
       this.drag.end = this.getMouse(evt);
-      this.drag.offset = difference(this.drag.end, this.drag.start);
+      this.drag.offset = subtract(this.drag.end, this.drag.start);
     }
   }
 
@@ -98,5 +89,15 @@ class ViewPort {
         active: false,
       };
     }
+  }
+
+  // handle zoom
+  #handleMouseWheel(evt) {
+    const dir = Math.sign(evt.deltaY);
+    // change zoom by this amount
+    const step = 0.1;
+    this.zoom += dir * step;
+    // keep zoom between some min and max value
+    this.zoom = Math.max(1, Math.min(5, this.zoom));
   }
 }
