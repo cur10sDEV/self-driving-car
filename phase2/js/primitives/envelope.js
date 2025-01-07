@@ -8,7 +8,7 @@ class Envelope {
     const { p1, p2 } = this.skeleton;
 
     const radius = width / 2; // centered around segment
-    const alpha = angle(difference(p1, p2));
+    const alpha = angle(subtract(p1, p2));
     // we need angles with offset 90*
     const alpha_cw = alpha + Math.PI / 2; // clockwise
     const alpha_ccw = alpha - Math.PI / 2; // counter clockwise
@@ -29,7 +29,7 @@ class Envelope {
     return new Polygon(points);
   }
 
-  draw(ctx) {
-    this.poly.draw(ctx);
+  draw(ctx, options) {
+    this.poly.draw(ctx, options);
   }
 }

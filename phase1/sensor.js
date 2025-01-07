@@ -46,14 +46,14 @@ class Sensor {
       }
     });
 
-    if (touches.length === 0) return null;
+    if (touches.length == 0) return null;
     else {
       // getIntersection also returns the offset value alongwith intersection coordinates - x and y
       // the offset value represents how much far away the point of intersection is from the car's center
       const offsets = touches.map((t) => t.offset);
       const minOffset = Math.min(...offsets); // getting the min offset
       // return the closest intersection
-      return touches.find((t) => t.offset === minOffset);
+      return touches.find((t) => t.offset == minOffset);
     }
   }
 
@@ -66,7 +66,7 @@ class Sensor {
         lerp(
           this.raySpread / 2,
           -this.raySpread / 2,
-          this.rayCount === 1 ? 0.5 : i / (this.rayCount - 1)
+          this.rayCount == 1 ? 0.5 : i / (this.rayCount - 1)
         ) + this.car.angle;
 
       // starts from car

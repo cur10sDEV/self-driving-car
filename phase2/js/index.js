@@ -1,20 +1,24 @@
-myCanvas.height = 800;
 myCanvas.width = 800;
+myCanvas.height = 800;
 
-const canvasCtx = myCanvas.getContext("2d");
+const ctx = myCanvas.getContext("2d");
 
-const isSavedInfo = localStorage.getItem("graph");
-const savedInfo = isSavedInfo ? JSON.parse(isSavedInfo) : null;
-const graph = savedInfo ? Graph.load(savedInfo) : new Graph();
-const viewport = new ViewPort(myCanvas);
+const graphString = localStorage.getItem("graph");
+const graphInfo = graphString ? JSON.parse(graphString) : null;
+const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+const world = new World(graph);
+
+const viewport = new Viewport(myCanvas);
 const graphEditor = new GraphEditor(viewport, graph);
 
 animate();
 
 function animate() {
   viewport.reset();
+  world.generate();
+  world.draw(ctx);
+  ctx.globalAlpha = 0.3;
   graphEditor.display();
-  new Envelope(graph.segments[0], 150, 20).draw(canvasCtx);
   requestAnimationFrame(animate);
 }
 
