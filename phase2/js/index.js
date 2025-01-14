@@ -11,11 +11,17 @@ const world = new World(graph);
 const viewport = new Viewport(myCanvas);
 const graphEditor = new GraphEditor(viewport, graph);
 
+// check for old hash
+let oldGraphHash = graph.hash();
 animate();
 
 function animate() {
   viewport.reset();
-  world.generate();
+  // if hash is same do not generate the world again and again
+  if (oldGraphHash !== graph.hash()) {
+    world.generate();
+    oldGraphHash = graph.hash();
+  }
   world.draw(ctx);
   ctx.globalAlpha = 0.3;
   graphEditor.display();
